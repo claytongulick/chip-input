@@ -1,0 +1,21 @@
+{
+  "name": "chips-input",
+  "version": "0.1.0",
+  "description": "A web component that implements a chip input and autocomplete, inspired by angular chip input",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "chip",
+    "input",
+    "web",
+    "component",
+    "search"
+  ],
+  "author": "Clayton C Gulick",
+  "license": "MIT",
+  "dependencies": {
+    "lit-element": "^2.1.0"
+  }
+}
