@@ -4,7 +4,9 @@
   "description": "A web component that implements a chip input and autocomplete, inspired by angular chip input",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-demo": "webpack --config ./demo/webpack.config.js",
+    "publish-demo": "git subtree push --prefix dist origin gh-pages"
   },
   "keywords": [
     "chip",
@@ -17,5 +19,9 @@
   "license": "MIT",
   "dependencies": {
     "lit-element": "^2.1.0"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^2.0.1",
+    "copy-webpack-plugin": "^5.0.2"
   }
 }
