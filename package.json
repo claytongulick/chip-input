@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-demo": "webpack --config ./demo/webpack.config.js",
-    "publish-demo": "git subtree push --prefix dist origin gh-pages"
+    "publish-demo": "git subtree push --prefix demo/dist origin gh-pages"
   },
   "keywords": [
     "chip",
