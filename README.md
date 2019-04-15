@@ -62,23 +62,23 @@ Since it is a common use case for chip inputs to be used for searching, we have 
 The main reason this component exists is for a simple, easy to understand and tweak chip input component. The code is (hopefully) straight forward and everything is implemented in just two classes, ComponentChipInput and ComponentChip. It should be simple to fork and customize, though in most cases this shouldn't be necessary. If you do end up forking and enhancing, please consider issuing a PR with your changes.
 
 As is typical with web components, appearance is controlled via css variables:
---chip-input-border-radius
---chip-input-border-color
---chip-input-border-width
---chip-input-font-size
---chip-input-search-icon-stroke
---chip-background-color
---chip-height
---chip-padding
---chip-border-color
---chip-border-width
---chip-font-size
---chip-icon-height
---chip-icon-width
---chip-close-icon-height
---chip-close-icon-width
---chip-close-icon-fill
---chip-close-icon-hover-fill
+* --chip-input-border-radius
+* --chip-input-border-color
+* --chip-input-border-width
+* --chip-input-font-size
+* --chip-input-search-icon-stroke
+* --chip-background-color
+* --chip-height
+* --chip-padding
+* --chip-border-color
+* --chip-border-width
+* --chip-font-size
+* --chip-icon-height
+* --chip-icon-width
+* --chip-close-icon-height
+* --chip-close-icon-width
+* --chip-close-icon-fill
+* --chip-close-icon-hover-fill
 
 ## Contributing
 Yes, please! 
