@@ -16,13 +16,26 @@ class ComponentMain extends LitElement {
                 width: 100%;
                 height: 100%;
             }
+
+            #default_view {
+                width: 50vw;
+            }
+
+            #rounded_view {
+                --chip-input-border-radius: 500px;
+                --chip-input-border-color: lightblue;
+                --chip-input-border-width: 2px;
+            }
         `;
     }
 
     render() {
         return html`
             <h1>Chip Input Demo</h1>
-            <app-chip-input search_icon=true></app-chip-input>
+            <h3>Default format</h3>
+            <app-chip-input id="default_view" search_icon=true></app-chip-input>
+            <h3>Rounded edges</h3>
+            <app-chip-input id="rounded_view" search_icon=true></app-chip-input>
         `;
     }
 }
