@@ -1,5 +1,5 @@
 {
-  "name": "chips-input",
+  "name": "chip-input",
   "version": "0.1.0",
   "description": "A web component that implements a chip input and autocomplete, inspired by angular chip input",
   "main": "index.js",
