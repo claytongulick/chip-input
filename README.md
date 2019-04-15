@@ -3,7 +3,7 @@ A pure web component implementation of a chip input inspired by angular's simila
 
 It is currently under early development, but I'm using it in more than one production application.
 
-[Check out the demo here](https://claytongulick.github.io/chip-input/)
+[Check out the demo here](https://claytongulick.github.io/chip-input/index.html)
 
 
 ## Installation
