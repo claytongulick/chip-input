@@ -27,6 +27,7 @@ class ChipInput extends LitElement {
         return css`
             :host {
                 display: flex;
+                flex-wrap: wrap;
                 justify-content: flex-start;
                 padding: 7px 3px;
                 align-items: center;
@@ -43,6 +44,10 @@ class ChipInput extends LitElement {
                 line-height: var(--chip-input-font-size, 24px);
                 border: none;
                 margin-left: 5px;
+                flex-shrink: 100;
+                flex-grow: 1;
+                flex-basis: 20%;
+                min-width: 20px;
             }
 
             #real_input:focus {
@@ -60,10 +65,6 @@ class ChipInput extends LitElement {
 
             #search_icon_stroke {
                 stroke: var(--chip-input-search-icon-stroke, lightblue);
-            }
-
-            #chips_container {
-                margin-left: 5px;
             }
 
             app-chip-input-chip {
@@ -90,9 +91,9 @@ class ChipInput extends LitElement {
                         <circle cx="5" cy="5" r="4"/>
                     </g>
                 </svg>` : ''}
-            <span id="chips_container">${this.chips.map(
+            ${this.chips.map(
                 (chip) => html`<app-chip-input-chip label="${chip}"></app-chip-input-chip>`
-            )}</span>
+            )}
             <input id="real_input" type="text"
                 @keydown=${(event) => this.handleKeydown(event)}
                 @change=${(event) => this.handleChange(event)}
@@ -109,6 +110,7 @@ class ChipInput extends LitElement {
         this.caret_position_tracker = this.shadowRoot.querySelector('#caret_position_tracker');
         this.real_input = this.shadowRoot.querySelector('#real_input');
         this.addEventListener('chip-close', (event) => this.handleChipClose(event))
+        this.addEventListener('click', (event) => this.real_input.focus());
     }
 
     connectedCallback() {
@@ -153,10 +155,10 @@ class ChipInput extends LitElement {
 
     handleChipClose(event) {
         let chip_component = event.detail;
-        let chips_container = this.shadowRoot.querySelector('#chips_container');
+        let chips = this.shadowRoot.querySelectorAll('app-chip-input-chip');
         let chip_index = -1;
-        for(let i=0; i<chips_container.childNodes.length; i++) {
-            if(chips_container.childNodes[i] == chip_component) {
+        for(let i=0; i<chips.length; i++) {
+            if(chips[i] == chip_component) {
                 chip_index = i;
                 break;
             }

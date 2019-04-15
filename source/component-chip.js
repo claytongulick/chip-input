@@ -76,11 +76,10 @@ class Chip extends LitElement {
         let close_event = new CustomEvent('chip-close', {
             composed: true,
             bubbles: true,
-            cancelable: true,
+            cancelable: false,
             detail: this
         });
-        dispatchEvent(close_event);
-        this.parentElement.removeChild(this);
+        this.dispatchEvent(close_event);
     }
 
     
