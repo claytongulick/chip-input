@@ -49,7 +49,7 @@ class ComponentMain extends LitElement {
 
         let found_states = STATES.filter(
             (state) => {
-                return state.toLowerCase().includes(input);
+                return state.toLowerCase().includes(input.toLowerCase());
             }
         );
 

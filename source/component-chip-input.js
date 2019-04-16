@@ -28,6 +28,14 @@ class ChipInput extends LitElement {
 
     static get styles() {
         return css`
+            :root {
+                --chip-font-size: var(--chip-input-font-size);
+                --chip-input-autocomplete-background-color: var(--chip-input-autocomplete-background-color, white);
+                --chip-input-autocomplete-border: var(--chip-input-autocomplete-border, 1px solid lightgrey);
+                --chip-input-autocomplete-border-radius: var(--chip-input-autocomplete-border-radius, 5px);
+                --chip-input-autocomplete-font-size: var(--chip-input-autocomplete-font-size, var(--chip-input-font-size, 24px));
+                --chip-input-autocomplete-hover-background-color: var(--chip-input-autocomplete-hover-background-color, lightblue);
+            }
             :host {
                 display: flex;
                 flex-wrap: wrap;
@@ -38,12 +46,6 @@ class ChipInput extends LitElement {
                 border-radius: var(--chip-input-border-radius, 0px);
                 border-color: var(--chip-input-border-color, transparent transparent #e0e0e0 transparent);
                 border-width: var(--chip-input-border-width, 0px 0px 2px 0px);
-                --chip-font-size: var(--chip-input-font-size);
-                --chip-input-autocomplete-background: var(--chip-input-autocomplete-background, white);
-                --chip-input-autocomplete-border: var(--chip-input-autocomplete-border, 1px solid lightgrey);
-                --chip-input-autocomplete-border-radius: var(--chip-input-autocomplete-border, 5px);
-                --chip-input-autocomplete-font-size: var(--chip-input-autocomplete-font-size, var(--chip-input-font-size, 24px));
-                --chip-input-autocomplete-hover-background-color: var(--chip-input-autocomplete-hover-background-color, lightblue);
             }
 
             #real_input {
@@ -94,6 +96,7 @@ class ChipInput extends LitElement {
     render() {
         return html`
             <style>
+                
             </style>
             ${this.start_icon ? html`<img id="start_icon" src=${this.start_icon}>` : ''}
             ${this.search_icon ? html`
@@ -110,6 +113,7 @@ class ChipInput extends LitElement {
                 @input=${(event) => this.handleInput(event)}
                 @beforeinput=${(event) => this.handleBeforeInput(event)}
                 @change=${(event) => this.handleChange(event)}
+                @keydown=${(event) => this.handleKeydown(event)}
                 @keyup=${(event) => this.updateCaretPosition(event)}
                 @click=${(event) => this.updateCaretPosition(event)}
                 @focus=${(event) => this.updateCaretPosition(event)}
@@ -128,11 +132,17 @@ class ChipInput extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
+        this.computed_style = getComputedStyle(this);
         this.autocomplete_list = document.querySelector('#chip-input-autocomplete-container');
         if(!this.autocomplete_list) {
             this.autocomplete_list = document.createElement('DIV');
             this.autocomplete_list.id = "chip-input-autocomplete-container";
-            this.autocomplete_list.style.backgroundColor = this.style.getPropertyValue('--chip-input-autocomplete-background')
+            this.autocomplete_list.style.display = 'none';
+            this.autocomplete_list.style.backgroundColor = 'var(--chip-input-autocomplete-background-color, white)';
+            this.autocomplete_list.style.border = 'var(--chip-input-autocomplete-border, 1px solid lightblue)';
+            this.autocomplete_list.style.borderRadius = 'var(--chip-input-autocomplete-border, 5px)';
+            this.autocomplete_list.style.fontSize = 'var(--chip-input-autocomplete-font-size, 24px)';
+            this.autocomplete_list.style.padding = 'var(--chip-input-autocomplete-padding, 5px 10px)';
             document.body.appendChild(this.autocomplete_list);
         }
         this.autocomplete_list.style.position='absolute';
@@ -151,6 +161,12 @@ class ChipInput extends LitElement {
         if((input_type == 'insertLineBreak')) {
             event.preventDefault();
             event.stopImmediatePropagation();
+            
+            if(this.highlighted_autocomplete_index !== null) {
+                let div = this.autocomplete_list.childNodes[this.highlighted_autocomplete_index];
+                return this.handleAutoCompleteItemSelected(div);
+            }
+
             return this.createChip();
         }
 
@@ -178,6 +194,41 @@ class ChipInput extends LitElement {
 
     }
 
+    handleKeydown(event) {
+        let key = event.key;
+        let navigating =false;
+        if(key == 'ArrowDown') {
+            if(this.highlighted_autocomplete_index == null)
+                this.highlighted_autocomplete_index = -1;
+            this.highlighted_autocomplete_index++;
+            if(this.highlighted_autocomplete_index > (this.autocomplete_list.childNodes.length - 1))
+                this.highlighted_autocomplete_index = this.autocomplete_list.childNodes.length - 1;
+            navigating = true;
+        }
+
+        if(key == 'ArrowUp') {
+            if(this.highlighted_autocomplete_index == null)
+                this.highlighted_autocomplete_index = 1;
+            this.highlighted_autocomplete_index--;
+            if(this.highlighted_autocomplete_index < 0)
+                this.highlighted_autocomplete_index = 0;
+            navigating = true;
+        }
+
+        if(navigating) {
+            let items = this.autocomplete_list.childNodes;
+            items.forEach(
+                (item, index) => {
+                    item.style.backgroundColor = 'var(--chip-input-autocomplete-background-color, white)';
+                    if(this.highlighted_autocomplete_index == index)
+                        item.style.backgroundColor = 'var(--chip-input-autocomplete-hover-background-color, lightblue)';
+                }
+            )
+        }
+
+
+    }
+
     handleChange(event) {
         if(!this.change_handler_enabled)
             return;
@@ -187,6 +238,9 @@ class ChipInput extends LitElement {
         this.change_handler_enabled = false;
         this.real_input.value = div.dataset.value;
         this.createChip();
+        this.closeAutoComplete();
+        this.real_input.focus();
+        this.highlighted_autocomplete_index = null;
     }
 
     handleChipClose(event) {
@@ -221,10 +275,16 @@ class ChipInput extends LitElement {
     async showAutoComplete(event) {
         let autocomplete_items = [];
         let value = this.real_input.value;
+        this.highlighted_autocomplete_index = null;
         if(this.autocomplete) {
             autocomplete_items = await this.autocomplete(value);
         }
-        this.autocomplete_list.style.top = this.caret_position.y + "px";
+        if(!autocomplete_items.length)
+            return this.closeAutoComplete();
+
+        let rect = this.real_input.getBoundingClientRect();
+        this.autocomplete_list.style.display = "block";
+        this.autocomplete_list.style.top = (this.caret_position.y + rect.height) + "px";
         this.autocomplete_list.style.left = this.caret_position.x + "px";
         this.autocomplete_list.innerHTML = '';
         let highlighted_items = autocomplete_items.map(
@@ -234,14 +294,29 @@ class ChipInput extends LitElement {
                 let match = item.substr(start_index, value.length);
                 let postfix = item.substr(start_index + value.length);
                 let div = document.createElement('DIV');
+
+                div.style.backgroundColor = 'var(--chip-input-autocomplete-background-color, white)';
+                div.style.borderBottom = '1px solid lightgrey';
+                div.style.padding = '3px';
+                div.style.cursor = 'pointer';
                 div.innerHTML = `${prefix}<span style='font-weight: bold'>${match}</span>${postfix}`;
                 div.dataset.value = item;
+                div.onmouseover = (event) => {
+                   div.style.backgroundColor = 'var(--chip-input-autocomplete-hover-background-color, lightblue)';
+                }
+                div.onmouseout = (event) => {
+                   div.style.backgroundColor = 'var(--chip-input-autocomplete-background-color, white)';
+                }
                 div.onclick = (event) => {
                     this.handleAutoCompleteItemSelected(div);
                 };
                 this.autocomplete_list.appendChild(div);
             }
         );
+    }
+
+    closeAutoComplete() {
+        this.autocomplete_list.style.display = 'none';
     }
 
     updateCaretPosition(event) {

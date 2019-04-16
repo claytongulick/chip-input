@@ -30,6 +30,7 @@ class Chip extends LitElement {
                 border-radius: 500px; /* this is a hack for variable size 'pill' shape, massive border radius gives auto-scaled pill */
                 font-size: var(--chip-font-size, 24px);
                 line-height: var(--chip-font-size, 24px);
+                white-space: nowrap;
             }
 
             #icon {
