@@ -18,7 +18,7 @@ let config = {
     }
   },
   plugins: [
-    new CleanWebpackPlugin(),
+    /*new CleanWebpackPlugin(),*/
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, 'index.html'),
