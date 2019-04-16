@@ -1,6 +1,8 @@
 import {html, css, LitElement} from 'lit-element';
 import ComponentChipInput from '../source/component-chip-input';
 
+const STATES = [ 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
+
 class ComponentMain extends LitElement {
 
     static get properties() {
@@ -33,10 +35,25 @@ class ComponentMain extends LitElement {
         return html`
             <h1>Chip Input Demo</h1>
             <h3>Default format</h3>
-            <app-chip-input id="default_view" search_icon=true></app-chip-input>
+            <app-chip-input id="default_view" .search_icon=${true}></app-chip-input>
             <h3>Rounded edges</h3>
-            <app-chip-input id="rounded_view" search_icon=true></app-chip-input>
+            <app-chip-input id="rounded_view" .search_icon=${true}></app-chip-input>
+            <h3>Auto complete (states)</h3>
+            <app-chip-input id="autocomplete_view" .search_icon=${false} .autocomplete=${(input) => this.handleAutoComplete(input)}></app-chip-input>
         `;
+    }
+
+    async handleAutoComplete(input) {
+        if(!input)
+            return [];
+
+        let found_states = STATES.filter(
+            (state) => {
+                return state.toLowerCase().includes(input);
+            }
+        );
+
+        return found_states;
     }
 }
 

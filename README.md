@@ -67,6 +67,11 @@ As is typical with web components, appearance is controlled via css variables:
 * --chip-input-border-width
 * --chip-input-font-size
 * --chip-input-search-icon-stroke
+* --chip-input-autocomplete-background
+* --chip-input-autocomplete-border
+* --chip-input-autocomplete-border-radius
+* --chip-input-autocomplete-font-size
+* --chip-input-autocomplete-hover-background-color
 * --chip-background-color
 * --chip-height
 * --chip-padding

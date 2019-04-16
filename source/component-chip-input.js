@@ -11,6 +11,9 @@ class ChipInput extends LitElement {
             autocomplete: {
                 type: Object
             },
+            autocomplete_debounce: {
+                type: Number
+            },
             start_icon: {
                 type: String
             },
@@ -36,6 +39,11 @@ class ChipInput extends LitElement {
                 border-color: var(--chip-input-border-color, transparent transparent #e0e0e0 transparent);
                 border-width: var(--chip-input-border-width, 0px 0px 2px 0px);
                 --chip-font-size: var(--chip-input-font-size);
+                --chip-input-autocomplete-background: var(--chip-input-autocomplete-background, white);
+                --chip-input-autocomplete-border: var(--chip-input-autocomplete-border, 1px solid lightgrey);
+                --chip-input-autocomplete-border-radius: var(--chip-input-autocomplete-border, 5px);
+                --chip-input-autocomplete-font-size: var(--chip-input-autocomplete-font-size, var(--chip-input-font-size, 24px));
+                --chip-input-autocomplete-hover-background-color: var(--chip-input-autocomplete-hover-background-color, lightblue);
             }
 
             #real_input {
@@ -55,7 +63,10 @@ class ChipInput extends LitElement {
             }
 
             #caret_position_tracker {
-                display: none;
+                visibility: hidden;
+                position: absolute;
+                top: 0px;
+                left: -5000px;
             }
 
             #search_icon {
@@ -77,6 +88,7 @@ class ChipInput extends LitElement {
         super();
         this.chips = [];
         this.change_handler_enabled = true;
+        this.autocomplete_debounce = 200;
     }
 
     render() {
@@ -95,7 +107,8 @@ class ChipInput extends LitElement {
                 (chip) => html`<app-chip-input-chip label="${chip}"></app-chip-input-chip>`
             )}
             <input id="real_input" type="text"
-                @keydown=${(event) => this.handleKeydown(event)}
+                @input=${(event) => this.handleInput(event)}
+                @beforeinput=${(event) => this.handleBeforeInput(event)}
                 @change=${(event) => this.handleChange(event)}
                 @keyup=${(event) => this.updateCaretPosition(event)}
                 @click=${(event) => this.updateCaretPosition(event)}
@@ -119,32 +132,55 @@ class ChipInput extends LitElement {
         if(!this.autocomplete_list) {
             this.autocomplete_list = document.createElement('DIV');
             this.autocomplete_list.id = "chip-input-autocomplete-container";
+            this.autocomplete_list.style.backgroundColor = this.style.getPropertyValue('--chip-input-autocomplete-background')
             document.body.appendChild(this.autocomplete_list);
         }
         this.autocomplete_list.style.position='absolute';
     }
 
-    handleKeydown(event) {
-        let key = event.key;
-        if([' ', 'Enter'].includes(key)) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            return this.createChip();
-        }
+    handleBeforeInput(event) {
+        let input_type = event.inputType;
 
-        if(key == 'Backspace') {
+        if(input_type == 'deleteContentBackward') {
             if(this.real_input.selectionStart == 0) {
                 if(this.chips.length)
                     this.deleteChip(this.chips.length - 1);
             }
         }
 
+        if((input_type == 'insertLineBreak')) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            return this.createChip();
+        }
+
+    }
+
+    handleInput(event) {
+        let input_type = event.inputType;
+        let key = event.data;
+        if(key == ' ') {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            return this.createChip();
+        }
+
+        if(this.autocomplete_debounce_key)
+            clearTimeout(this.autocomplete_debounce_key);
+
+        this.autocomplete_debounce_key = setTimeout(
+            () => {
+                this.autocomplete_debounce_key = null;
+                this.showAutoComplete(event);
+            },
+            this.autocomplete_debounce
+        );
+
     }
 
     handleChange(event) {
         if(!this.change_handler_enabled)
             return;
-        this.showAutoComplete();
     }
 
     handleAutoCompleteItemSelected(div) {
@@ -182,29 +218,30 @@ class ChipInput extends LitElement {
         this.change_handler_enabled = true;
     }
 
-    async showAutoComplete() {
+    async showAutoComplete(event) {
         let autocomplete_items = [];
         let value = this.real_input.value;
         if(this.autocomplete) {
-            autocomplete_items = await this.autocomplete();
+            autocomplete_items = await this.autocomplete(value);
         }
         this.autocomplete_list.style.top = this.caret_position.y + "px";
         this.autocomplete_list.style.left = this.caret_position.x + "px";
+        this.autocomplete_list.innerHTML = '';
         let highlighted_items = autocomplete_items.map(
             (item) => {
-                let start_index = item.indexOf(value);
+                let start_index = item.toLowerCase().indexOf(value.toLowerCase());
                 let prefix = item.substring(0,start_index);
-                let match = item.substring(start_index, value.length);
-                let postfix = item.substring(start_index + value.length);
+                let match = item.substr(start_index, value.length);
+                let postfix = item.substr(start_index + value.length);
                 let div = document.createElement('DIV');
                 div.innerHTML = `${prefix}<span style='font-weight: bold'>${match}</span>${postfix}`;
                 div.dataset.value = item;
                 div.onclick = (event) => {
                     this.handleAutoCompleteItemSelected(div);
                 };
+                this.autocomplete_list.appendChild(div);
             }
         );
-        this.autocomplete_list.innerHTML = highlighted_items;
     }
 
     updateCaretPosition(event) {
