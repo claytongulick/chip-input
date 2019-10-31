@@ -14,6 +14,12 @@ class ChipInput extends LitElement {
             autocomplete_debounce: {
                 type: Number
             },
+            show_autocomplete_on_focus: {
+                type: Boolean
+            },
+            constrain_input: {
+                type: Boolean
+            },
             start_icon: {
                 type: String
             },
@@ -22,6 +28,9 @@ class ChipInput extends LitElement {
             },
             search_icon: {
                 type: Boolean
+            },
+            delimiters: {
+                type: Array
             }
         }
     }
@@ -91,6 +100,10 @@ class ChipInput extends LitElement {
         this.chips = [];
         this.change_handler_enabled = true;
         this.autocomplete_debounce = 200;
+        this.delimiters = [' '];
+        this.constrain_input = false;
+
+        this.boundClickHandler = this.handleDocumentClick.bind(this);
     }
 
     render() {
@@ -116,7 +129,7 @@ class ChipInput extends LitElement {
                 @keydown=${(event) => this.handleKeydown(event)}
                 @keyup=${(event) => this.updateCaretPosition(event)}
                 @click=${(event) => this.updateCaretPosition(event)}
-                @focus=${(event) => this.updateCaretPosition(event)}
+                @focus=${(event) => this.handleFocus(event)}
             >
             ${this.start_icon ? html`<img id="end_icon" src=${this.start_icon}>` : ''}
             <div id="caret_position_tracker"></div>
@@ -128,6 +141,9 @@ class ChipInput extends LitElement {
         this.real_input = this.shadowRoot.querySelector('#real_input');
         this.addEventListener('chip-close', (event) => this.handleChipClose(event))
         this.addEventListener('click', (event) => this.real_input.focus());
+    }
+
+    disconnectedCallback() {
     }
 
     connectedCallback() {
@@ -143,19 +159,44 @@ class ChipInput extends LitElement {
             this.autocomplete_list.style.borderRadius = 'var(--chip-input-autocomplete-border, 5px)';
             this.autocomplete_list.style.fontSize = 'var(--chip-input-autocomplete-font-size, 24px)';
             this.autocomplete_list.style.padding = 'var(--chip-input-autocomplete-padding, 5px 10px)';
+            this.autocomplete_list.style.maxHeight = 'var(--chip-input-autocomplete-max-height, 200px)';
+            this.autocomplete_list.style.overflow = 'auto';
+            this.autocomplete_list.addEventListener('focus', (event) => {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            });
             document.body.appendChild(this.autocomplete_list);
         }
         this.autocomplete_list.style.position='absolute';
     }
 
-    handleBeforeInput(event) {
+    async handleFocus(event) {
+        this.updateCaretPosition(event);
+        if(this.show_autocomplete_on_focus && this.autocomplete) {
+            let autocomplete_items = await this.autocomplete(this.real_input.value);
+            await this.showAutoComplete(autocomplete_items, this.real_input.value);
+        }
+    }
+
+    handleDocumentClick(event) {
+        if(event.path.includes(this))
+            return;
+
+        this.closeAutoComplete(true);
+
+    }
+
+    async handleBeforeInput(event) {
         let input_type = event.inputType;
+        let key = event.data;
+        let autocomplete_items = [];
 
         if(input_type == 'deleteContentBackward') {
             if(this.real_input.selectionStart == 0) {
                 if(this.chips.length)
                     this.deleteChip(this.chips.length - 1);
             }
+            return;
         }
 
         if((input_type == 'insertLineBreak')) {
@@ -170,24 +211,47 @@ class ChipInput extends LitElement {
             return this.createChip();
         }
 
+        if(this.constrain_input && this.autocomplete) {
+            let value = this.real_input.value;
+            value += key;
+            this.highlighted_autocomplete_index = null;
+            if (this.autocomplete) {
+                autocomplete_items = await this.autocomplete(value);
+            }
+            if (!autocomplete_items.length) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }
+            return;
+        }
+
     }
 
-    handleInput(event) {
-        let input_type = event.inputType;
-        let key = event.data;
-        if(key == ' ') {
+    async handleInput(event) {
+        let autocomplete_items = [];
+        let key = event ? event.data || '' : '';
+        if(this.delimiters.includes(key)) {
             event.preventDefault();
             event.stopImmediatePropagation();
-            return this.createChip();
+            if(!this.constrain_input)
+                return this.createChip();
         }
 
         if(this.autocomplete_debounce_key)
             clearTimeout(this.autocomplete_debounce_key);
 
         this.autocomplete_debounce_key = setTimeout(
-            () => {
+            async () => {
                 this.autocomplete_debounce_key = null;
-                this.showAutoComplete(event);
+                let value = this.real_input.value;
+                this.highlighted_autocomplete_index = null;
+                if (this.autocomplete) {
+                    autocomplete_items = await this.autocomplete(value);
+                }
+                if (!autocomplete_items.length)
+                    return this.closeAutoComplete();
+
+                return this.showAutoComplete(autocomplete_items, value);
             },
             this.autocomplete_debounce
         );
@@ -220,8 +284,10 @@ class ChipInput extends LitElement {
             items.forEach(
                 (item, index) => {
                     item.style.backgroundColor = 'var(--chip-input-autocomplete-background-color, white)';
-                    if(this.highlighted_autocomplete_index == index)
+                    if(this.highlighted_autocomplete_index == index) {
                         item.style.backgroundColor = 'var(--chip-input-autocomplete-hover-background-color, lightblue)';
+                        item.scrollIntoView();
+                    }
                 }
             )
         }
@@ -239,6 +305,7 @@ class ChipInput extends LitElement {
         this.real_input.value = div.dataset.value;
         this.createChip();
         this.closeAutoComplete();
+        this.real_input.blur();
         this.real_input.focus();
         this.highlighted_autocomplete_index = null;
     }
@@ -261,6 +328,9 @@ class ChipInput extends LitElement {
     async deleteChip(index) {
         this.chips.splice(index, 1);
         await this.requestUpdate();
+        if(this.show_autocomplete_on_focus && this.autocomplete) {
+            this.handleInput();
+        }
     }
 
     async createChip() {
@@ -270,19 +340,15 @@ class ChipInput extends LitElement {
         this.change_handler_enabled = false;
         this.real_input.value = '';
         this.change_handler_enabled = true;
+
+        if(this.show_autocomplete_on_focus && this.autocomplete) {
+            this.handleInput();
+        }
     }
 
-    async showAutoComplete(event) {
-        let autocomplete_items = [];
-        let value = this.real_input.value;
-        this.highlighted_autocomplete_index = null;
-        if(this.autocomplete) {
-            autocomplete_items = await this.autocomplete(value);
-        }
-        if(!autocomplete_items.length)
-            return this.closeAutoComplete();
-
+    async showAutoComplete(autocomplete_items, highlight_value) {
         let rect = this.real_input.getBoundingClientRect();
+        let value = highlight_value;
         this.autocomplete_list.style.display = "block";
         this.autocomplete_list.style.top = (this.caret_position.y + rect.height) + "px";
         this.autocomplete_list.style.left = this.caret_position.x + "px";
@@ -294,6 +360,10 @@ class ChipInput extends LitElement {
                 let match = item.substr(start_index, value.length);
                 let postfix = item.substr(start_index + value.length);
                 let div = document.createElement('DIV');
+                div.addEventListener('focus', (event) => {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                });
 
                 div.style.backgroundColor = 'var(--chip-input-autocomplete-background-color, white)';
                 div.style.borderBottom = '1px solid lightgrey';
@@ -313,9 +383,13 @@ class ChipInput extends LitElement {
                 this.autocomplete_list.appendChild(div);
             }
         );
+        document.addEventListener('click',this.boundClickHandler);
     }
 
-    closeAutoComplete() {
+    closeAutoComplete(force) {
+        if(!force && this.show_autocomplete_on_focus)
+            return;
+        document.removeEventListener('click',this.boundClickHandler);
         this.autocomplete_list.style.display = 'none';
     }
 

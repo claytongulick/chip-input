@@ -51,6 +51,20 @@ async handleAutoComplete(input) {
 }
 ```
 
+### show_autocomplete_on_focus
+Display the autocomplete list on focus, don't wait for a key to be pressed. The autocomplete callback function will be passed a blank
+value for input in this case, and can decide what default items should be displayed in the list.
+
+### constrain_input
+False by default.
+
+Setting this value to true will prevent input that doesn't match an item in the autocomplete list. This is used to force
+a user to select an item from the autocomplete list in order to create a tag.
+
+If there is no autocomplete function defined, this value is ignored.
+
+Note: If this option is set to true, autocomplete debouncing will be disabled. This is because it's impossible to constrain the input unless the autocomplete function is executed for each key. It's recommended that this option only be used with a locally cached list of items that can be quickly returned, since executing an API call on each keystroke may present unacceptable latency to the user.
+
 ### start_icon
 A string that's used for the icon to show at the beginning of the input. Should be a url for an icon, data urls are fine.
 
@@ -59,6 +73,23 @@ A string that's used for the icon to show at the end of the input. Should be a u
 
 ### search_icon
 Since it is a common use case for chip inputs to be used for searching, we have a built-in search icon that can be optionally displayed. This is just to save you some time hunting down a search icon, if you like the one that's included. Some syling options are available for the icon so you can tweak color/stroke. The search icon is inline-svg, so it's very easy to add/tweak styling.
+
+### delimiters
+An array of strings used as delimiters. By default, this property is [' '], which means that the space character is used as a delimiter.
+
+This behavior can be customized by setting delimiters to one or more desired characters, for example, [';',':'] would use the semicolon and colon characters as delimiters.
+
+Additionally, if tags that have multiple words are desired, the delimiters array can be set to empty to allow multiple words:
+
+```
+render() {
+    //allow multiple words in a tag - the tag will be created when "Enter" is pressed
+    return html`
+        <app-chip-input .delimiters=${[]}></app-chip-input>
+    `;
+}
+
+```
 
 ## Customizing
 The main reason this component exists is for a simple, easy to understand and tweak chip input component. The code is (hopefully) straight forward and everything is implemented in just two classes, ComponentChipInput and ComponentChip. It should be simple to fork and customize, though in most cases this shouldn't be necessary. If you do end up forking and enhancing, please consider issuing a PR with your changes.
@@ -86,6 +117,7 @@ As is typical with web components, appearance is controlled via css variables:
 * --chip-close-icon-width
 * --chip-close-icon-fill
 * --chip-close-icon-hover-fill
+* --chip-input-autocomplete-max-height - control the height of the autocomplete popup
 
 ## Contributing
 Yes, please! 

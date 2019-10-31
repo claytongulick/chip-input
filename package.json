@@ -4,7 +4,9 @@
   "description": "A web component that implements a chip input and autocomplete, inspired by angular chip input",
   "main": "index.js",
   "homepage": "https://github.com/claytongulick/chip-input#readme",
-  "bugs": { "url" : "https://github.com/claytongulick/chip-input/issues"},
+  "bugs": {
+    "url": "https://github.com/claytongulick/chip-input/issues"
+  },
   "repository": "github:claytongulick/chip-input",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -29,6 +31,9 @@
   },
   "devDependencies": {
     "clean-webpack-plugin": "^2.0.1",
-    "copy-webpack-plugin": "^5.0.2"
+    "copy-webpack-plugin": "^5.0.2",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
   }
 }

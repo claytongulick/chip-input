@@ -40,12 +40,24 @@ class ComponentMain extends LitElement {
             <app-chip-input id="rounded_view" .search_icon=${true}></app-chip-input>
             <h3>Auto complete (states)</h3>
             <app-chip-input id="autocomplete_view" .search_icon=${false} .autocomplete=${(input) => this.handleAutoComplete(input)}></app-chip-input>
+            <h3>Constrain input to autocomplete, show autocomplete on focus</h3>
+            <app-chip-input id="delimiters_view" 
+                .delimiters=${[]} 
+                .search_icon=${false} 
+                .constrain_input=${true} 
+                .autocomplete=${(input) => this.handleAutoComplete(input)}
+                .show_autocomplete_on_focus=${true}
+            >
+            </app-chip-input>
+            <h3>Allow spaces in tags</h3>
+            <app-chip-input id="spasces_view" .delimiters=${[]} .search_icon=${false}></app-chip-input>
         `;
     }
 
     async handleAutoComplete(input) {
-        if(!input)
-            return [];
+        if(!input) {
+            return STATES;
+        }
 
         let found_states = STATES.filter(
             (state) => {
