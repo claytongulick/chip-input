@@ -58,6 +58,14 @@ class Chip extends LitElement {
         `;
     }
 
+    get chip_input() {
+        return this._chip_input;
+    }
+
+    set chip_input(value) {
+        this._chip_input = value;
+    }
+
     render() {
         return html`
             ${this.icon ? 
@@ -80,7 +88,8 @@ class Chip extends LitElement {
             cancelable: false,
             detail: this
         });
-        this.dispatchEvent(close_event);
+        //this.dispatchEvent(close_event);
+        this.chip_input.dispatchEvent(close_event);
     }
 
     

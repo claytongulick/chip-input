@@ -120,7 +120,7 @@ class ChipInput extends LitElement {
                     </g>
                 </svg>` : ''}
             ${this.chips.map(
-                (chip) => html`<app-chip-input-chip label="${chip}"></app-chip-input-chip>`
+                (chip) => html`<app-chip-input-chip label="${chip}" .chip_input=${this}></app-chip-input-chip>`
             )}
             <input id="real_input" type="text"
                 @input=${(event) => this.handleInput(event)}
