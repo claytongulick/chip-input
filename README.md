@@ -36,8 +36,18 @@ render() {
 An array of strings that can be used to get/set the chips.
 
 ### autocomplete
-An async function that's called when autocomplete is triggered. Return a promise that resolves with an array of strings to display in the
-autocomplete dropdown.
+An async function that's called when autocomplete is triggered. Return a promise that resolves with an array of items to display in the autocomplete dropdown. The returned value can be either a string or an item that looks like:
+```
+{
+    label: String,
+    data: Object
+}
+```
+
+If the returned item is an object, as defined above, the data will be kept with the created tag and will be broadcast with all of the tag events in the detail of the event. The label will be used to render the autocomplete item.
+
+For convenience, automatic highlighting of the matched characters is performed when rendering. This behavior can be controlled by setting autocomplete_highlight to false. In this case, if custom highlighting is desired, or no highlighting at all, then the returned string or label value should contain the markup to render.
+
 ```
 render() {
     return html`
@@ -50,6 +60,9 @@ async handleAutoComplete(input) {
     return [some array of strings]
 }
 ```
+
+### autocomplete_highlight
+Whether the autocomplete list should be highlighted with the search term. Setting this to false will disable highlighting. True by default.
 
 ### show_autocomplete_on_focus
 Display the autocomplete list on focus, don't wait for a key to be pressed. The autocomplete callback function will be passed a blank
@@ -89,6 +102,21 @@ render() {
     `;
 }
 
+```
+
+## Events
+
+### chip-close
+Dispatched when a chip is closed
+
+### chip-click
+Dispatched with a chip is clicked. Detail contains:
+```
+{
+    label: String, //the label of the clicked chip
+    data: Object, //data, if any, associated with the item. This comes from the autocomplete callback function
+    event: Event //the original click event
+}
 ```
 
 ## Customizing

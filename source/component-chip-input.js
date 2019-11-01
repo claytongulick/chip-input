@@ -11,6 +11,9 @@ class ChipInput extends LitElement {
             autocomplete: {
                 type: Object
             },
+            autocomplete_highlight: {
+                type: Boolean
+            },
             autocomplete_debounce: {
                 type: Number
             },
@@ -100,6 +103,7 @@ class ChipInput extends LitElement {
         this.chips = [];
         this.change_handler_enabled = true;
         this.autocomplete_debounce = 200;
+        this.autocomplete_highlight = true;
         this.delimiters = [' '];
         this.constrain_input = false;
 
@@ -120,7 +124,7 @@ class ChipInput extends LitElement {
                     </g>
                 </svg>` : ''}
             ${this.chips.map(
-                (chip) => html`<app-chip-input-chip label="${chip}" .chip_input=${this}></app-chip-input-chip>`
+                (chip) => html`<app-chip-input-chip @click=${(event) => this.handleChipClick(event,chip)} label="${chip.label}" .data=${chip.data} .chip_input=${this}></app-chip-input-chip>`
             )}
             <input id="real_input" type="text"
                 @input=${(event) => this.handleInput(event)}
@@ -168,6 +172,22 @@ class ChipInput extends LitElement {
             document.body.appendChild(this.autocomplete_list);
         }
         this.autocomplete_list.style.position='absolute';
+    }
+
+    handleChipClick(event, chip) {
+        let click_event = new CustomEvent('chip-click', {
+            composed: true,
+            bubbles: true,
+            cancelable: false,
+            detail: {
+                label: chip.label,
+                data: chip.data,
+                event: event
+            }
+        });
+        //this.dispatchEvent(close_event);
+        this.dispatchEvent(click_event);
+
     }
 
     async handleFocus(event) {
@@ -303,7 +323,7 @@ class ChipInput extends LitElement {
     handleAutoCompleteItemSelected(div) {
         this.change_handler_enabled = false;
         this.real_input.value = div.dataset.value;
-        this.createChip();
+        this.createChip(div.autocomplete_data);
         this.closeAutoComplete();
         this.real_input.blur();
         this.real_input.focus();
@@ -333,9 +353,9 @@ class ChipInput extends LitElement {
         }
     }
 
-    async createChip() {
+    async createChip(data) {
         let value = this.real_input.value;
-        this.chips.push(value);
+        this.chips.push({label: value, data: data});
         await this.requestUpdate();
         this.change_handler_enabled = false;
         this.real_input.value = '';
@@ -355,10 +375,19 @@ class ChipInput extends LitElement {
         this.autocomplete_list.innerHTML = '';
         let highlighted_items = autocomplete_items.map(
             (item) => {
-                let start_index = item.toLowerCase().indexOf(value.toLowerCase());
-                let prefix = item.substring(0,start_index);
-                let match = item.substr(start_index, value.length);
-                let postfix = item.substr(start_index + value.length);
+                let label = '';
+                let data = {};
+                
+                if(typeof item == 'string') {
+                    label = item;
+                } else {
+                    label = item.label;
+                    data = item.data;
+                }
+                let start_index = label.toLowerCase().indexOf(value.toLowerCase());
+                let prefix = label.substring(0,start_index);
+                let match = label.substr(start_index, value.length);
+                let postfix = label.substr(start_index + value.length);
                 let div = document.createElement('DIV');
                 div.addEventListener('focus', (event) => {
                     event.preventDefault();
@@ -369,8 +398,14 @@ class ChipInput extends LitElement {
                 div.style.borderBottom = '1px solid lightgrey';
                 div.style.padding = '3px';
                 div.style.cursor = 'pointer';
-                div.innerHTML = `${prefix}<span style='font-weight: bold'>${match}</span>${postfix}`;
-                div.dataset.value = item;
+
+                if(this.autocomplete_highlight)
+                    div.innerHTML = `${prefix}<span style='font-weight: bold'>${match}</span>${postfix}`;
+                else
+                    div.innerHTML = label;
+
+                div.dataset.value = label;
+                div.autocomplete_data = data;
                 div.onmouseover = (event) => {
                    div.style.backgroundColor = 'var(--chip-input-autocomplete-hover-background-color, lightblue)';
                 }

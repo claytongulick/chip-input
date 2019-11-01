@@ -7,6 +7,9 @@ class Chip extends LitElement {
             label: {
                 type: String
             },
+            data: {
+                type: Object
+            },
             icon: {
                 type: String 
             },

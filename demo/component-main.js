@@ -50,8 +50,14 @@ class ComponentMain extends LitElement {
             >
             </app-chip-input>
             <h3>Allow spaces in tags</h3>
-            <app-chip-input id="spasces_view" .delimiters=${[]} .search_icon=${false}></app-chip-input>
+            <app-chip-input id="spaces_view" .delimiters=${[]} .search_icon=${false}></app-chip-input>
+            <h3>Add data to chips, alert on click</h3>
+            <app-chip-input id="data_view" @chip-click=${(event) => this.handleChipClick(event)} .search_icon=${false} .autocomplete=${(input) => this.handleDataAutoComplete(input)}></app-chip-input>
         `;
+    }
+
+    handleChipClick(event) {
+        alert(JSON.stringify(event.detail.data));
     }
 
     async handleAutoComplete(input) {
@@ -66,6 +72,34 @@ class ComponentMain extends LitElement {
         );
 
         return found_states;
+    }
+
+    async handleDataAutoComplete(input) {
+        let mapped_states = STATES.map(
+            (state) => {
+                return {
+                    label: state, 
+                    data: 
+                        {
+                            long_label: `state data: ${state}`,
+                            id: 123
+                        }
+                    }
+                }
+        );
+
+        if(!input) {
+            return mapped_states;
+        }
+
+        let found_states = mapped_states.filter(
+            (state) => {
+                return state.label.toLowerCase().includes(input.toLowerCase());
+            }
+        );
+
+        return found_states;
+
     }
 }
 
