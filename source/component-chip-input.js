@@ -346,8 +346,15 @@ class ChipInput extends LitElement {
     }
 
     async deleteChip(index) {
-        this.chips.splice(index, 1);
+        let chip = this.chips.splice(index, 1);
         await this.requestUpdate();
+        let change_event = new CustomEvent('chip-change', {
+            composed: true,
+            bubbles: true,
+            cancelable: false,
+        });
+        this.dispatchEvent(close_event);
+        this.dispatchEvent(change_event);
         if(this.show_autocomplete_on_focus && this.autocomplete) {
             this.handleInput();
         }
@@ -360,6 +367,23 @@ class ChipInput extends LitElement {
         this.change_handler_enabled = false;
         this.real_input.value = '';
         this.change_handler_enabled = true;
+
+        let add_event = new CustomEvent('chip-create', {
+            composed: true,
+            bubbles: true,
+            cancelable: false,
+            detail: {
+                label: value,
+                data: data,
+            }
+        });
+        let change_event = new CustomEvent('chip-change', {
+            composed: true,
+            bubbles: true,
+            cancelable: false,
+        });
+        this.dispatchEvent(add_event);
+        this.dispatchEvent(change_event);
 
         if(this.show_autocomplete_on_focus && this.autocomplete) {
             this.handleInput();
