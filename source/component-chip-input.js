@@ -353,7 +353,6 @@ class ChipInput extends LitElement {
             bubbles: true,
             cancelable: false,
         });
-        this.dispatchEvent(close_event);
         this.dispatchEvent(change_event);
         if(this.show_autocomplete_on_focus && this.autocomplete) {
             this.handleInput();
