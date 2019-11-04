@@ -105,9 +105,26 @@ render() {
 ```
 
 ## Events
+### chip-create
+Dispatched when a chip is created. Detail contains:
+```
+{
+    label: String, //the label of the clicked chip
+    data: Object, //data, if any, associated with the item. This comes from the autocomplete callback function
+}
+```
+
+### chip-change
+Dispatched with a chip is created or deleted
 
 ### chip-close
-Dispatched when a chip is closed
+Dispatched when a chip is closed. Detail contains:
+```
+{
+    label: String, //the label of the clicked chip
+    data: Object, //data, if any, associated with the item. This comes from the autocomplete callback function
+}
+```
 
 ### chip-click
 Dispatched with a chip is clicked. Detail contains:

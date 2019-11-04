@@ -51,13 +51,26 @@ class ComponentMain extends LitElement {
             </app-chip-input>
             <h3>Allow spaces in tags</h3>
             <app-chip-input id="spaces_view" .delimiters=${[]} .search_icon=${false}></app-chip-input>
-            <h3>Add data to chips, alert on click</h3>
-            <app-chip-input id="data_view" @chip-click=${(event) => this.handleChipClick(event)} .search_icon=${false} .autocomplete=${(input) => this.handleDataAutoComplete(input)}></app-chip-input>
+            <h3>Add data to chips, alert on click, close, change</h3>
+            <app-chip-input 
+                id="data_view" 
+                @chip-change=${(event) => this.handleChipChange(event)} 
+                @chip-close=${(event) => this.handleChipClose(event)} 
+                @chip-click=${(event) => this.handleChipClick(event)} 
+                .search_icon=${false} 
+                .autocomplete=${(input) => this.handleDataAutoComplete(input)}>
+            </app-chip-input>
         `;
     }
 
     handleChipClick(event) {
-        alert(JSON.stringify(event.detail.data));
+        alert("Chip click: " + JSON.stringify(event.detail.data));
+    }
+    handleChipChange(event) {
+        alert("Chip change");
+    }
+    handleChipClose(event) {
+        alert("Chip close: " + JSON.stringify(event.detail.data));
     }
 
     async handleAutoComplete(input) {
