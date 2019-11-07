@@ -60,6 +60,13 @@ class ComponentMain extends LitElement {
                 .search_icon=${false} 
                 .autocomplete=${(input) => this.handleDataAutoComplete(input)}>
             </app-chip-input>
+            <h3>Custom label in autocomplete and chip</h3>
+            <app-chip-input 
+                id="icon_view" 
+                .search_icon=${false} 
+                .autocomplete_highlight=${false}
+                .autocomplete=${(input) => this.handleHTMLAutoComplete(input)}>
+            </app-chip-input>
         `;
     }
 
@@ -71,6 +78,34 @@ class ComponentMain extends LitElement {
     }
     handleChipClose(event) {
         alert("Chip close: " + JSON.stringify(event.detail.data));
+    }
+
+    async handleHTMLAutoComplete(input) {
+        let mapped_states = STATES.map(
+            (state) => {
+                return {
+                    label: `<span style='font-size: 16px; color: grey; line-height: 24px;'>state: </span>${state}`, 
+                    data: 
+                        {
+                            long_label: `state data: ${state}`,
+                            id: 123
+                        }
+                    }
+                }
+        );
+
+        if(!input) {
+            return mapped_states;
+        }
+
+        let found_states = mapped_states.filter(
+            (state) => {
+                return state.label.toLowerCase().includes(input.toLowerCase());
+            }
+        );
+
+        return found_states;
+
     }
 
     async handleAutoComplete(input) {

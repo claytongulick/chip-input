@@ -1,4 +1,5 @@
 import {html, css, LitElement} from 'lit-element';
+import {unsafeHTML} from 'lit-html/directives/unsafe-html';
 
 class Chip extends LitElement {
 
@@ -74,7 +75,7 @@ class Chip extends LitElement {
             ${this.icon ? 
                 html`<img id="icon" src=${this.icon}>` : ''
             }
-            <span id="label">${this.label}</span>
+            <span id="label">${unsafeHTML(this.label)}</span>
             ${this.close_icon ? 
                 html`<img id="close_icon" @click=${(event)=> this.handleClose(event)} src=${this.close_icon}>` : 
                 html`<div id="close_icon" @click=${(event)=> this.handleClose(event)} ><svg fill="#000000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
