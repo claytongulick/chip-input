@@ -386,6 +386,7 @@ class ChipInput extends LitElement {
         this.dispatchEvent(change_event);
 
         if(this.show_autocomplete_on_focus && this.autocomplete) {
+            this.updateCaretPosition();
             this.handleInput();
         }
     }
@@ -452,7 +453,7 @@ class ChipInput extends LitElement {
         this.autocomplete_list.style.display = 'none';
     }
 
-    updateCaretPosition(event) {
+    updateCaretPosition() {
         let selection_start = this.real_input.selectionStart;
         let updated_value = this.real_input.value.substring(0, selection_start).replace(/\s/g, "\u00a0");
         this.caret_position_tracker.textContent = updated_value;

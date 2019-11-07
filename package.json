@@ -1,6 +1,6 @@
 {
   "name": "chip-input",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "A web component that implements a chip input and autocomplete, inspired by angular chip input",
   "main": "index.js",
   "homepage": "https://github.com/claytongulick/chip-input#readme",

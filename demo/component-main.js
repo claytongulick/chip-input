@@ -64,6 +64,7 @@ class ComponentMain extends LitElement {
             <app-chip-input 
                 id="icon_view" 
                 .search_icon=${false} 
+                .show_autocomplete_on_focus=${true}
                 .autocomplete_highlight=${false}
                 .autocomplete=${(input) => this.handleHTMLAutoComplete(input)}>
             </app-chip-input>
