@@ -1,3 +1,8 @@
+/*
+ *   Copyright (c) 2021 Ratio Software, LLC 
+ *   All rights reserved.
+ *   @author Clayton Gulick <clay@ratiosoftware.com>
+ */
 import {html, css, LitElement} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html';
 import ComponentChip from './component-chip';
@@ -7,6 +12,9 @@ class ChipInput extends LitElement {
     static get properties() {
         return  {
             chips: {
+                type: Array
+            },
+            texts: {
                 type: Array
             },
             autocomplete: {
@@ -136,7 +144,7 @@ class ChipInput extends LitElement {
                 @click=${(event) => this.updateCaretPosition(event)}
                 @focus=${(event) => this.handleFocus(event)}
             >
-            ${this.start_icon ? html`<img id="end_icon" src=${this.start_icon}>` : ''}
+            ${this.end_icon ? html`<img id="end_icon" src=${this.end_icon}>` : ''}
             <div id="caret_position_tracker"></div>
         `;
     }
