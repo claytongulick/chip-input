@@ -90,6 +90,9 @@ Since it is a common use case for chip inputs to be used for searching, we have 
 ### delimiters
 An array of strings used as delimiters. By default, this property is [' '], which means that the space character is used as a delimiter.
 
+### placeholder
+The placeholder text to use in the input element
+
 This behavior can be customized by setting delimiters to one or more desired characters, for example, [';',':'] would use the semicolon and colon characters as delimiters.
 
 Additionally, if tags that have multiple words are desired, the delimiters array can be set to empty to allow multiple words:

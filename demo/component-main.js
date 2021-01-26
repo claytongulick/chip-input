@@ -1,3 +1,8 @@
+/*
+ *   Copyright (c) 2021 Ratio Software, LLC 
+ *   All rights reserved.
+ *   @author Clayton Gulick <clay@ratiosoftware.com>
+ */
 import {html, css, LitElement} from 'lit-element';
 import ComponentChipInput from '../source/component-chip-input';
 
@@ -39,10 +44,11 @@ class ComponentMain extends LitElement {
             <h3>Rounded edges</h3>
             <app-chip-input id="rounded_view" .search_icon=${true}></app-chip-input>
             <h3>Auto complete (states)</h3>
-            <app-chip-input id="autocomplete_view" .search_icon=${false} .autocomplete=${(input) => this.handleAutoComplete(input)}></app-chip-input>
-            <h3>Constrain input to autocomplete, show autocomplete on focus</h3>
+            <app-chip-input id="autocomplete_view" .placeholder=${"Select a state..."} .search_icon=${false} .autocomplete=${(input) => this.handleAutoComplete(input)}></app-chip-input>
+            <h3>Constrain input to autocomplete, show autocomplete on focus, placeholder</h3>
             <app-chip-input id="delimiters_view" 
                 .delimiters=${[]} 
+                .placeholder=${"Select a thing..."}
                 .search_icon=${false} 
                 .constrain_input=${true} 
                 .autocomplete=${(input) => this.handleAutoComplete(input)}
@@ -67,6 +73,18 @@ class ComponentMain extends LitElement {
                 .show_autocomplete_on_focus=${true}
                 .autocomplete_highlight=${false}
                 .autocomplete=${(input) => this.handleHTMLAutoComplete(input)}>
+            </app-chip-input>
+            <h3>Smaller font</h3>
+            <app-chip-input 
+                style="
+                height: 16px;
+                --chip-input-font-size: 14px;
+                --chip-font-size: 14px;
+                "
+                id="icon_view" 
+                .search_icon=${false} 
+                .show_autocomplete_on_focus=${true}
+                .autocomplete=${(input) => this.handleAutoComplete(input)}>
             </app-chip-input>
         `;
     }

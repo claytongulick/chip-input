@@ -43,6 +43,9 @@ class ChipInput extends LitElement {
             },
             delimiters: {
                 type: Array
+            },
+            placeholder: {
+                type: String
             }
         }
     }
@@ -136,6 +139,7 @@ class ChipInput extends LitElement {
                 (chip) => html`<app-chip-input-chip @click=${(event) => this.handleChipClick(event,chip)} label="${chip.label}" .data=${chip.data} .chip_input=${this}></app-chip-input-chip>`
             )}
             <input id="real_input" type="text"
+                placeholder=${this.placeholder || ''}
                 @input=${(event) => this.handleInput(event)}
                 @beforeinput=${(event) => this.handleBeforeInput(event)}
                 @change=${(event) => this.handleChange(event)}
