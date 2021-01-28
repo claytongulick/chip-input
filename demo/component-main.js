@@ -86,7 +86,24 @@ class ComponentMain extends LitElement {
                 .show_autocomplete_on_focus=${true}
                 .autocomplete=${(input) => this.handleAutoComplete(input)}>
             </app-chip-input>
+            <h3>Listen for changes</h3>
+            <app-chip-input id="event_listeners" 
+                .delimiters=${[]} 
+                .placeholder=${"Select a thing..."}
+                .search_icon=${false} 
+                .constrain_input=${true} 
+                .autocomplete=${(input) => this.handleAutoComplete(input)}
+                .show_autocomplete_on_focus=${true}
+                @chip-input=${e => this.handleInput(e)}
+            >
+            </app-chip-input>
+            <div id="event_log"></div>
         `;
+    }
+
+    handleInput(e) {
+        let log_element = this.shadowRoot.querySelector('#event_log');
+        log_element.innerHTML = `Event: chip-input value: ${e.target.value}`;
     }
 
     handleChipClick(event) {

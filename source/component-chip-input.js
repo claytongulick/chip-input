@@ -46,6 +46,9 @@ class ChipInput extends LitElement {
             },
             placeholder: {
                 type: String
+            },
+            value: {
+                type: String
             }
         }
     }
@@ -139,6 +142,7 @@ class ChipInput extends LitElement {
                 (chip) => html`<app-chip-input-chip @click=${(event) => this.handleChipClick(event,chip)} label="${chip.label}" .data=${chip.data} .chip_input=${this}></app-chip-input-chip>`
             )}
             <input id="real_input" type="text"
+                value=${this.value || ''}
                 placeholder=${this.placeholder || ''}
                 @input=${(event) => this.handleInput(event)}
                 @beforeinput=${(event) => this.handleBeforeInput(event)}
@@ -262,6 +266,7 @@ class ChipInput extends LitElement {
 
     async handleInput(event) {
         let autocomplete_items = [];
+        this.value = this.real_input.value;
         let key = event ? event.data || '' : '';
         if(this.delimiters.includes(key)) {
             event.preventDefault();
@@ -288,6 +293,8 @@ class ChipInput extends LitElement {
             },
             this.autocomplete_debounce
         );
+
+        this.dispatchEvent(new CustomEvent('chip-input', {bubbles: true, composed: true}));
 
     }
 

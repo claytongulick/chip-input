@@ -1,3 +1,8 @@
+/*
+ *   Copyright (c) 2021 Ratio Software, LLC 
+ *   All rights reserved.
+ *   @author Clayton Gulick <clay@ratiosoftware.com>
+ */
 let path = require('path');
 let CopyWebpackPlugin = require('copy-webpack-plugin');
 let CleanWebpackPlugin = require('clean-webpack-plugin');
