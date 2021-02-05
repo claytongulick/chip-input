@@ -64,6 +64,11 @@ async handleAutoComplete(input) {
 ### autocomplete_highlight
 Whether the autocomplete list should be highlighted with the search term. Setting this to false will disable highlighting. True by default.
 
+### autocomplete_dismiss_target
+Normally the component listens on document for a click event to dismiss the autocomplete popup. Sometimes this isn't desirable,
+like in the case of usage inside certain modals or popups. In this case, a different target can be specified where the component
+will listen for the click event. This should be a dom node.
+
 ### show_autocomplete_on_focus
 Display the autocomplete list on focus, don't wait for a key to be pressed. The autocomplete callback function will be passed a blank
 value for input in this case, and can decide what default items should be displayed in the list.

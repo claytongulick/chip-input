@@ -1,3 +1,8 @@
+/*
+ *   Copyright (c) 2021 Ratio Software, LLC 
+ *   All rights reserved.
+ *   @author Clayton Gulick <clay@ratiosoftware.com>
+ */
 import {html, css, LitElement} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html';
 

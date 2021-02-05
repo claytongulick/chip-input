@@ -26,6 +26,9 @@ class ChipInput extends LitElement {
             autocomplete_debounce: {
                 type: Number
             },
+            autocomplete_dismiss_target: {
+                type: Object
+            },
             show_autocomplete_on_focus: {
                 type: Boolean
             },
@@ -462,7 +465,19 @@ class ChipInput extends LitElement {
                 this.autocomplete_list.appendChild(div);
             }
         );
-        document.addEventListener('click',this.boundClickHandler);
+        let autocomplete_dismiss_target = document;
+        let element;
+        if(this.autocomplete_dismiss_target) {
+            if(typeof this.autocomplete_dismiss_target == 'string')
+                element = document.querySelector(this.autocomplete_dismiss_target);
+            else
+                element = this.autocomplete_dismiss_target;
+
+        }
+        if(element)
+            autocomplete_dismiss_target = element;
+
+        autocomplete_dismiss_target.addEventListener('click',this.boundClickHandler);
     }
 
     closeAutoComplete(force) {

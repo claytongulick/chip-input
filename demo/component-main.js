@@ -94,11 +94,21 @@ class ComponentMain extends LitElement {
                 .constrain_input=${true} 
                 .autocomplete=${(input) => this.handleAutoComplete(input)}
                 .show_autocomplete_on_focus=${true}
+                .autocomplete_dismiss_target=${'#autocomplete_click_target'}
                 @chip-input=${e => this.handleInput(e)}
             >
             </app-chip-input>
+            <div id="autocomplete_click_target" style="height: 50px;padding:20px; border: 1px solid black; background-color: #a8a8a8; border-radius: 8px;">
+                Click here to dismiss autocomplete
+            </div>
             <div id="event_log"></div>
         `;
+    }
+
+    firstUpdated() {
+        let element = this.shadowRoot.querySelector('#event_listeners');
+        let target = this.shadowRoot.querySelector('#autocomplete_click_target');
+        element.autocomplete_dismiss_target = target;
     }
 
     handleInput(e) {
