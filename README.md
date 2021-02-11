@@ -125,6 +125,9 @@ Dispatched when a chip is created. Detail contains:
 ### chip-change
 Dispatched with a chip is created or deleted
 
+### chip-input
+Dispatched when the component receives input from keystroke or other means
+
 ### chip-close
 Dispatched when a chip is closed. Detail contains:
 ```
