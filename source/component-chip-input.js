@@ -483,7 +483,10 @@ class ChipInput extends LitElement {
     closeAutoComplete(force) {
         if(!force && this.show_autocomplete_on_focus)
             return;
-        document.removeEventListener('click',this.boundClickHandler);
+        if(this.autocomplete_dismiss_target)
+            this.autocomplete_dismiss_target.removeEventListener('click',this.boundClickHandler);
+        else
+            document.removeEventListener('click',this.boundClickHandler);
         this.autocomplete_list.style.display = 'none';
     }
 
