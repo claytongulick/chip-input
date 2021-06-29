@@ -23,6 +23,9 @@ class ChipInput extends LitElement {
             autocomplete_highlight: {
                 type: Boolean
             },
+            autocomplete_select_default: {
+                type: Boolean
+            },
             autocomplete_debounce: {
                 type: Number
             },
@@ -246,6 +249,14 @@ class ChipInput extends LitElement {
             if(this.highlighted_autocomplete_index !== null) {
                 let div = this.autocomplete_list.childNodes[this.highlighted_autocomplete_index];
                 return this.handleAutoCompleteItemSelected(div);
+            }
+            else {
+                if(this.autocomplete_select_default) {
+                    if(this.autocomplete_list.childNodes.length) {
+                        let div = this.autocomplete_list.childNodes[0];
+                        return this.handleAutoCompleteItemSelected(div);
+                    }
+                }
             }
 
             return this.createChip();

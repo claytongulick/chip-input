@@ -69,6 +69,9 @@ Normally the component listens on document for a click event to dismiss the auto
 like in the case of usage inside certain modals or popups. In this case, a different target can be specified where the component
 will listen for the click event. This should be a dom node.
 
+### autocomplete_select_default
+When the autocomplete list is open and the enter, "Go" or newline key is pressed, instead of creating a new chip, setting this property to true will cause the first item in the autocomplete list to be selected, even if it's not highlighted. The use case for this is mostly on mobile where a user may think an item is selected when they search and narrow down to a single list item. They select "Go" on the softkey expecting the item that's shown to be selected, however if this is set to false, a chip will be created instead.
+
 ### show_autocomplete_on_focus
 Display the autocomplete list on focus, don't wait for a key to be pressed. The autocomplete callback function will be passed a blank
 value for input in this case, and can decide what default items should be displayed in the list.
