@@ -422,6 +422,9 @@ class ChipInput extends LitElement {
             this.updateCaretPosition();
             this.handleInput();
         }
+        else if(this.autocomplete) {
+            this.closeAutoComplete();
+        }
     }
 
     async showAutoComplete(autocomplete_items, highlight_value) {

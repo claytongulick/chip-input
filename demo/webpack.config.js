@@ -16,10 +16,12 @@ let config = {
   mode: "development",
   devtool: 'inline-source-map',
   devServer: {
-    publicPath: '/',
-    overlay: {
-      warnings: true,
-      errors: true
+    devMiddleware: {
+      publicPath: '/',
+    },
+    client: {
+      overlay: true,
+      progress: true
     }
   },
   plugins: [
