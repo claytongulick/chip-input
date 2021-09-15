@@ -171,8 +171,10 @@ class ChipInput extends LitElement {
     }
 
     disconnectedCallback() {
-        if(this.autocomplete_list)
+        let autocomplete_list = document.querySelector('#chip-input-autocomplete-container');
+        if(autocomplete_list) {
             document.body.removeChild(this.autocomplete_list);
+        }
     }
 
     connectedCallback() {
