@@ -1,5 +1,5 @@
 //TODO implement slider on the chip to indicate tag importance
-import {html, css, LitElement} from 'lit-element';
+import {html, css, LitElement} from 'lit';
 
 class SliderChip extends LitElement {
 

@@ -3,8 +3,8 @@
  *   All rights reserved.
  *   @author Clayton Gulick <clay@ratiosoftware.com>
  */
-import {html, css, LitElement} from 'lit-element';
-import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
+import {html, css, LitElement} from 'lit';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 
 class Chip extends LitElement {
 
