@@ -44,7 +44,12 @@ class ComponentMain extends LitElement {
             <h3>Rounded edges</h3>
             <app-chip-input id="rounded_view" .search_icon=${true}></app-chip-input>
             <h3>Auto complete (states)</h3>
-            <app-chip-input id="autocomplete_view" .placeholder=${"Select a state..."} .search_icon=${false} .autocomplete=${(input) => this.handleAutoComplete(input)}></app-chip-input>
+            <app-chip-input 
+                id="autocomplete_view" 
+                .placeholder=${"Select a state..."} 
+                .search_icon=${false} 
+                .autocomplete_highlight=${true}
+                .autocomplete=${(input) => this.handleAutoComplete(input)}></app-chip-input>
             <h3>Constrain input to autocomplete, show autocomplete on focus, placeholder</h3>
             <app-chip-input id="delimiters_view" 
                 .delimiters=${[]} 
@@ -161,8 +166,9 @@ class ComponentMain extends LitElement {
 
         let found_states = STATES.filter(
             (state) => {
-                //return state.toLowerCase().includes(input.toLowerCase());
-                return state.toLowerCase().startsWith(input[0].toLowerCase());
+                return state.toLowerCase().includes(input.toLowerCase());
+                // for testing fuzzy match highlight: 
+                //return state.toLowerCase().startsWith(input[0].toLowerCase());
             }
         );
 

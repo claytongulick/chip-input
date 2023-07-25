@@ -512,6 +512,8 @@ class ChipInput extends LitElement {
     }
 
     highlightFuzzyMatch(label, value) {
+        if(!this.autocomplete_highlight)
+            return label;
         let chars = new Set(value);
         let result = '';
         for(let letter of label) {
