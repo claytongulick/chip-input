@@ -44,7 +44,7 @@
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const t$2 = window, e$4 = t$2.ShadowRoot && (void 0 === t$2.ShadyCSS || t$2.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, s$3 = Symbol(), n$4 = /* @__PURE__ */ new WeakMap();
+const t$2 = window, e$4 = t$2.ShadowRoot && (void 0 === t$2.ShadyCSS || t$2.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, s$3 = Symbol(), n$3 = /* @__PURE__ */ new WeakMap();
 let o$4 = class o {
   constructor(t2, e2, n2) {
     if (this._$cssResult$ = true, n2 !== s$3)
@@ -56,7 +56,7 @@ let o$4 = class o {
     const s2 = this.t;
     if (e$4 && void 0 === t2) {
       const e2 = void 0 !== s2 && 1 === s2.length;
-      e2 && (t2 = n$4.get(s2)), void 0 === t2 && ((this.o = t2 = new CSSStyleSheet()).replaceSync(this.cssText), e2 && n$4.set(s2, t2));
+      e2 && (t2 = n$3.get(s2)), void 0 === t2 && ((this.o = t2 = new CSSStyleSheet()).replaceSync(this.cssText), e2 && n$3.set(s2, t2));
     }
     return t2;
   }
@@ -90,7 +90,7 @@ const r$2 = (t2) => new o$4("string" == typeof t2 ? t2 : t2 + "", void 0, s$3), 
  * SPDX-License-Identifier: BSD-3-Clause
  */
 var s$2;
-const e$3 = window, r$1 = e$3.trustedTypes, h$1 = r$1 ? r$1.emptyScript : "", o$3 = e$3.reactiveElementPolyfillSupport, n$3 = { toAttribute(t2, i2) {
+const e$3 = window, r$1 = e$3.trustedTypes, h$1 = r$1 ? r$1.emptyScript : "", o$3 = e$3.reactiveElementPolyfillSupport, n$2 = { toAttribute(t2, i2) {
   switch (i2) {
     case Boolean:
       t2 = t2 ? h$1 : null;
@@ -118,7 +118,7 @@ const e$3 = window, r$1 = e$3.trustedTypes, h$1 = r$1 ? r$1.emptyScript : "", o$
       }
   }
   return s2;
-} }, a$1 = (t2, i2) => i2 !== t2 && (i2 == i2 || t2 == t2), l$2 = { attribute: true, type: String, converter: n$3, reflect: false, hasChanged: a$1 }, d$1 = "finalized";
+} }, a$1 = (t2, i2) => i2 !== t2 && (i2 == i2 || t2 == t2), l$2 = { attribute: true, type: String, converter: n$2, reflect: false, hasChanged: a$1 }, d$1 = "finalized";
 let u$1 = class u extends HTMLElement {
   constructor() {
     super(), this._$Ei = /* @__PURE__ */ new Map(), this.isUpdatePending = false, this.hasUpdated = false, this._$El = null, this.u();
@@ -223,7 +223,7 @@ let u$1 = class u extends HTMLElement {
     var e2;
     const r2 = this.constructor._$Ep(t2, s2);
     if (void 0 !== r2 && true === s2.reflect) {
-      const h2 = (void 0 !== (null === (e2 = s2.converter) || void 0 === e2 ? void 0 : e2.toAttribute) ? s2.converter : n$3).toAttribute(i2, s2.type);
+      const h2 = (void 0 !== (null === (e2 = s2.converter) || void 0 === e2 ? void 0 : e2.toAttribute) ? s2.converter : n$2).toAttribute(i2, s2.type);
       this._$El = t2, null == h2 ? this.removeAttribute(r2) : this.setAttribute(r2, h2), this._$El = null;
     }
   }
@@ -231,7 +231,7 @@ let u$1 = class u extends HTMLElement {
     var s2;
     const e2 = this.constructor, r2 = e2._$Ev.get(t2);
     if (void 0 !== r2 && this._$El !== r2) {
-      const t3 = e2.getPropertyOptions(r2), h2 = "function" == typeof t3.converter ? { fromAttribute: t3.converter } : void 0 !== (null === (s2 = t3.converter) || void 0 === s2 ? void 0 : s2.fromAttribute) ? t3.converter : n$3;
+      const t3 = e2.getPropertyOptions(r2), h2 = "function" == typeof t3.converter ? { fromAttribute: t3.converter } : void 0 !== (null === (s2 = t3.converter) || void 0 === s2 ? void 0 : s2.fromAttribute) ? t3.converter : n$2;
       this._$El = r2, this[r2] = h2.fromAttribute(i2, t3.type), this._$El = null;
     }
   }
@@ -305,7 +305,7 @@ u$1[d$1] = true, u$1.elementProperties = /* @__PURE__ */ new Map(), u$1.elementS
  * SPDX-License-Identifier: BSD-3-Clause
  */
 var t$1;
-const i$1 = window, s$1 = i$1.trustedTypes, e$2 = s$1 ? s$1.createPolicy("lit-html", { createHTML: (t2) => t2 }) : void 0, o$2 = "$lit$", n$2 = `lit$${(Math.random() + "").slice(9)}$`, l$1 = "?" + n$2, h = `<${l$1}>`, r = document, u2 = () => r.createComment(""), d = (t2) => null === t2 || "object" != typeof t2 && "function" != typeof t2, c = Array.isArray, v = (t2) => c(t2) || "function" == typeof (null == t2 ? void 0 : t2[Symbol.iterator]), a = "[ 	\n\f\r]", f = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, _ = /-->/g, m = />/g, p = RegExp(`>|${a}(?:([^\\s"'>=/]+)(${a}*=${a}*(?:[^ 	
+const i$1 = window, s$1 = i$1.trustedTypes, e$2 = s$1 ? s$1.createPolicy("lit-html", { createHTML: (t2) => t2 }) : void 0, o$2 = "$lit$", n$1 = `lit$${(Math.random() + "").slice(9)}$`, l$1 = "?" + n$1, h = `<${l$1}>`, r = document, u2 = () => r.createComment(""), d = (t2) => null === t2 || "object" != typeof t2 && "function" != typeof t2, c = Array.isArray, v = (t2) => c(t2) || "function" == typeof (null == t2 ? void 0 : t2[Symbol.iterator]), a = "[ 	\n\f\r]", f = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, _ = /-->/g, m = />/g, p = RegExp(`>|${a}(?:([^\\s"'>=/]+)(${a}*=${a}*(?:[^ 	
 \f\r"'\`<>=]|("|')|))|$)`, "g"), g = /'/g, $ = /"/g, y = /^(?:script|style|textarea|title)$/i, w = (t2) => (i2, ...s2) => ({ _$litType$: t2, strings: i2, values: s2 }), x = w(1), T = Symbol.for("lit-noChange"), A = Symbol.for("lit-nothing"), E = /* @__PURE__ */ new WeakMap(), C = r.createTreeWalker(r, 129, null, false);
 function P(t2, i2) {
   if (!Array.isArray(t2) || !t2.hasOwnProperty("raw"))
@@ -321,7 +321,7 @@ const V = (t2, i2) => {
     for (; a2 < s3.length && (u3.lastIndex = a2, c2 = u3.exec(s3), null !== c2); )
       a2 = u3.lastIndex, u3 === f ? "!--" === c2[1] ? u3 = _ : void 0 !== c2[1] ? u3 = m : void 0 !== c2[2] ? (y.test(c2[2]) && (l2 = RegExp("</" + c2[2], "g")), u3 = p) : void 0 !== c2[3] && (u3 = p) : u3 === p ? ">" === c2[0] ? (u3 = null != l2 ? l2 : f, v2 = -1) : void 0 === c2[1] ? v2 = -2 : (v2 = u3.lastIndex - c2[2].length, d2 = c2[1], u3 = void 0 === c2[3] ? p : '"' === c2[3] ? $ : g) : u3 === $ || u3 === g ? u3 = p : u3 === _ || u3 === m ? u3 = f : (u3 = p, l2 = void 0);
     const w2 = u3 === p && t2[i3 + 1].startsWith("/>") ? " " : "";
-    r2 += u3 === f ? s3 + h : v2 >= 0 ? (e2.push(d2), s3.slice(0, v2) + o$2 + s3.slice(v2) + n$2 + w2) : s3 + n$2 + (-2 === v2 ? (e2.push(void 0), i3) : w2);
+    r2 += u3 === f ? s3 + h : v2 >= 0 ? (e2.push(d2), s3.slice(0, v2) + o$2 + s3.slice(v2) + n$1 + w2) : s3 + n$1 + (-2 === v2 ? (e2.push(void 0), i3) : w2);
   }
   return [P(t2, r2 + (t2[s2] || "<?>") + (2 === i2 ? "</svg>" : "")), e2];
 };
@@ -340,10 +340,10 @@ class N {
         if (h2.hasAttributes()) {
           const t3 = [];
           for (const i3 of h2.getAttributeNames())
-            if (i3.endsWith(o$2) || i3.startsWith(n$2)) {
+            if (i3.endsWith(o$2) || i3.startsWith(n$1)) {
               const s2 = f2[d2++];
               if (t3.push(i3), void 0 !== s2) {
-                const t4 = h2.getAttribute(s2.toLowerCase() + o$2).split(n$2), i4 = /([.?@])?(.*)/.exec(s2);
+                const t4 = h2.getAttribute(s2.toLowerCase() + o$2).split(n$1), i4 = /([.?@])?(.*)/.exec(s2);
                 v2.push({ type: 1, index: r2, name: i4[2], strings: t4, ctor: "." === i4[1] ? H : "?" === i4[1] ? L : "@" === i4[1] ? z : k });
               } else
                 v2.push({ type: 6, index: r2 });
@@ -352,7 +352,7 @@ class N {
             h2.removeAttribute(i3);
         }
         if (y.test(h2.tagName)) {
-          const t3 = h2.textContent.split(n$2), i3 = t3.length - 1;
+          const t3 = h2.textContent.split(n$1), i3 = t3.length - 1;
           if (i3 > 0) {
             h2.textContent = s$1 ? s$1.emptyScript : "";
             for (let s2 = 0; s2 < i3; s2++)
@@ -365,8 +365,8 @@ class N {
           v2.push({ type: 2, index: r2 });
         else {
           let t3 = -1;
-          for (; -1 !== (t3 = h2.data.indexOf(n$2, t3 + 1)); )
-            v2.push({ type: 7, index: r2 }), t3 += n$2.length - 1;
+          for (; -1 !== (t3 = h2.data.indexOf(n$1, t3 + 1)); )
+            v2.push({ type: 7, index: r2 }), t3 += n$1.length - 1;
         }
       r2++;
     }
@@ -595,22 +595,9 @@ class s extends u$1 {
   }
 }
 s.finalized = true, s._$litElement$ = true, null === (l = globalThis.litElementHydrateSupport) || void 0 === l || l.call(globalThis, { LitElement: s });
-const n$1 = globalThis.litElementPolyfillSupport;
-null == n$1 || n$1({ LitElement: s });
+const n = globalThis.litElementPolyfillSupport;
+null == n || n({ LitElement: s });
 (null !== (o$1 = globalThis.litElementVersions) && void 0 !== o$1 ? o$1 : globalThis.litElementVersions = []).push("3.3.2");
-/**
- * @license
- * Copyright 2021 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-var n;
-null != (null === (n = window.HTMLSlotElement) || void 0 === n ? void 0 : n.prototype.assignedElements) ? (o3, n2) => o3.assignedElements(n2) : (o3, n2) => o3.assignedNodes(n2).filter((o4) => o4.nodeType === Node.ELEMENT_NODE);
-/**
- * @license
- * Copyright 2017 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-console.warn("The main 'lit-element' module entrypoint is deprecated. Please update your imports to use the 'lit' package: 'lit' and 'lit/decorators.ts' or import from 'lit-element/lit-element.ts'. See https://lit.dev/msg/deprecated-import-path for more information.");
 /**
  * @license
  * Copyright 2017 Google LLC
@@ -1142,9 +1129,11 @@ class ChipInput extends s {
           data = item.data;
         }
         let start_index = label.toLowerCase().indexOf(value.toLowerCase());
-        let prefix = label.substring(0, start_index);
-        let match = label.substr(start_index, value.length);
-        let postfix = label.substr(start_index + value.length);
+        let content;
+        if (start_index >= 0)
+          content = this.highlightPartialMatch(label, value);
+        else
+          content = this.highlightFuzzyMatch(label, value);
         let div = document.createElement("DIV");
         div.addEventListener("focus", (event) => {
           event.preventDefault();
@@ -1154,10 +1143,7 @@ class ChipInput extends s {
         div.style.borderBottom = "1px solid lightgrey";
         div.style.padding = "3px";
         div.style.cursor = "pointer";
-        if (this.autocomplete_highlight)
-          div.innerHTML = `${prefix}<span style='font-weight: bold'>${match}</span>${postfix}`;
-        else
-          div.innerHTML = label;
+        div.innerHTML = content;
         div.dataset.value = label;
         div.autocomplete_data = data;
         div.onmouseover = (event) => {
@@ -1184,6 +1170,27 @@ class ChipInput extends s {
       autocomplete_dismiss_target = element;
     autocomplete_dismiss_target.addEventListener("click", this.boundClickHandler);
   }
+  highlightPartialMatch(label, value) {
+    if (!this.autocomplete_highlight)
+      return label;
+    let start_index = label.toLowerCase().indexOf(value.toLowerCase());
+    let prefix = label.substring(0, start_index);
+    let match = label.substring(start_index, start_index + value.length);
+    let postfix = label.substring(start_index + value.length);
+    if (this.autocomplete_highlight)
+      return `${prefix}<b>${match}</b>${postfix}`;
+  }
+  highlightFuzzyMatch(label, value) {
+    let chars = new Set(value);
+    let result = "";
+    for (let letter of label) {
+      if (chars.has(letter))
+        result += `<b>${letter}</b>`;
+      else
+        result += letter;
+    }
+    return result;
+  }
   closeAutoComplete(force) {
     if (!force && this.show_autocomplete_on_focus)
       return;
@@ -1193,7 +1200,8 @@ class ChipInput extends s {
       document.removeEventListener("click", this.boundClickHandler);
     this.autocomplete_list.style.display = "none";
   }
-  updateCaretPosition() {
+  updateCaretPosition(event) {
+    event.stopImmediatePropagation();
     let selection_start = this.real_input.selectionStart;
     let updated_value = this.real_input.value.substring(0, selection_start).replace(/\s/g, " ");
     this.caret_position_tracker.textContent = updated_value;
@@ -1344,7 +1352,7 @@ class ComponentMain extends s {
     }
     let found_states = STATES.filter(
       (state) => {
-        return state.toLowerCase().includes(input.toLowerCase());
+        return state.toLowerCase().startsWith(input[0].toLowerCase());
       }
     );
     return found_states;
@@ -1380,4 +1388,4 @@ document.addEventListener(
     body.appendChild(new ComponentMain());
   }
 );
-//# sourceMappingURL=index-515fd666.js.map
+//# sourceMappingURL=index-ef5a0133.js.map

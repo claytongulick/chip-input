@@ -450,9 +450,13 @@ class ChipInput extends LitElement {
                     data = item.data;
                 }
                 let start_index = label.toLowerCase().indexOf(value.toLowerCase());
-                let prefix = label.substring(0,start_index);
-                let match = label.substr(start_index, value.length);
-                let postfix = label.substr(start_index + value.length);
+                let content;
+
+                if(start_index >= 0)
+                    content = this.highlightPartialMatch(label, value);
+                else
+                    content = this.highlightFuzzyMatch(label, value);
+
                 let div = document.createElement('DIV');
                 div.addEventListener('focus', (event) => {
                     event.preventDefault();
@@ -463,11 +467,7 @@ class ChipInput extends LitElement {
                 div.style.borderBottom = '1px solid lightgrey';
                 div.style.padding = '3px';
                 div.style.cursor = 'pointer';
-
-                if(this.autocomplete_highlight)
-                    div.innerHTML = `${prefix}<span style='font-weight: bold'>${match}</span>${postfix}`;
-                else
-                    div.innerHTML = label;
+                div.innerHTML = content;
 
                 div.dataset.value = label;
                 div.autocomplete_data = data;
@@ -498,6 +498,31 @@ class ChipInput extends LitElement {
         autocomplete_dismiss_target.addEventListener('click',this.boundClickHandler);
     }
 
+    highlightPartialMatch(label, value) {
+        if(!this.autocomplete_highlight)
+            return label;
+
+        let start_index = label.toLowerCase().indexOf(value.toLowerCase());
+        let prefix = label.substring(0,start_index);
+        let match = label.substring(start_index, start_index + value.length);
+        let postfix = label.substring(start_index + value.length);
+        if(this.autocomplete_highlight)
+            return `${prefix}<b>${match}</b>${postfix}`;
+
+    }
+
+    highlightFuzzyMatch(label, value) {
+        let chars = new Set(value);
+        let result = '';
+        for(let letter of label) {
+            if(chars.has(letter))
+                result += `<b>${letter}</b>`;
+            else
+                result += letter;
+        }
+        return result;
+    }
+
     closeAutoComplete(force) {
         if(!force && this.show_autocomplete_on_focus)
             return;
@@ -508,7 +533,8 @@ class ChipInput extends LitElement {
         this.autocomplete_list.style.display = 'none';
     }
 
-    updateCaretPosition() {
+    updateCaretPosition(event) {
+        event.stopImmediatePropagation();
         let selection_start = this.real_input.selectionStart;
         let updated_value = this.real_input.value.substring(0, selection_start).replace(/\s/g, "\u00a0");
         this.caret_position_tracker.textContent = updated_value;
