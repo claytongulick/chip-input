@@ -158,6 +158,8 @@ As is typical with web components, appearance is controlled via css variables:
 * --chip-input-border-color
 * --chip-input-border-width
 * --chip-input-font-size
+* --chip-input-font-weight
+* --chip-input-font-family
 * --chip-input-search-icon-stroke
 * --chip-input-autocomplete-background
 * --chip-input-autocomplete-border
@@ -170,6 +172,8 @@ As is typical with web components, appearance is controlled via css variables:
 * --chip-border-color
 * --chip-border-width
 * --chip-font-size
+* --chip-font-weight
+* --chip-font-family
 * --chip-icon-height
 * --chip-icon-width
 * --chip-close-icon-height

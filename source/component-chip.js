@@ -38,6 +38,8 @@ class Chip extends LitElement {
                 border-width: var(--chip-border-width, 0px);
                 border-radius: 500px; /* this is a hack for variable size 'pill' shape, massive border radius gives auto-scaled pill */
                 font-size: var(--chip-font-size, 24px);
+                font-family: var(--chip-font-family, --chip-input-font-family, arial);
+                font-weight: var(--chip-font-weight, --chip-input-font-weight, normal);
                 line-height: var(--chip-font-size, 24px);
                 white-space: nowrap;
             }

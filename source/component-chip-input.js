@@ -84,6 +84,8 @@ class ChipInput extends LitElement {
             #real_input {
                 height: 100%;
                 font-size: var(--chip-input-font-size, 24px);
+                font-family: var(--chip-input-font-family, arial);
+                font-weight: var(--chip-input-font-weight, normal);
                 line-height: var(--chip-input-font-size, 24px);
                 border: none;
                 margin-left: 5px;
